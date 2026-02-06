@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+body {
+  background:
+    radial-gradient(circle at top, rgba(0,255,255,0.08), transparent 40%),
+    radial-gradient(circle at bottom, rgba(0,100,255,0.08), transparent 40%),
+    #05070d;
+  color: #e5e7eb;
+  font-family: ui-sans-serif, system-ui, -apple-system;
+}
