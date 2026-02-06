@@ -11,6 +11,5 @@ dist/
 # OS
 .DS_Store
 
-# Data & models
-*.pkl
+# Data (raw datasets only)
 data/raw/
