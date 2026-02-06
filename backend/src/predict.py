@@ -2,17 +2,21 @@ import os
 import joblib
 import pandas as pd
 
-# ---------------- CONFIG ----------------
+# ---------------- PATH SETUP ----------------
 
-MODEL_PATH = os.path.join("models", "churn_pipeline.pkl")
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "models", "churn_pipeline.pkl")
 
 # Business-driven churn threshold
-# Lowered from 0.5 because churn datasets are imbalanced
+# Lowered because churn datasets are imbalanced
 CHURN_THRESHOLD = 0.4
 
-# ---------------- LOAD MODEL ----------------
+# ---------------- LOAD MODEL (ONCE) ----------------
 
-pipeline = joblib.load(MODEL_PATH)
+try:
+    pipeline = joblib.load(MODEL_PATH)
+except Exception as e:
+    raise RuntimeError(f"❌ Failed to load model pipeline: {e}")
 
 # ---------------- PREDICTION FUNCTION ----------------
 
@@ -22,7 +26,7 @@ def predict_churn(data: dict):
     using the trained sklearn Pipeline.
     """
 
-    # Build input dataframe exactly as training expected
+    # Build input dataframe EXACTLY as training expected
     df = pd.DataFrame([{
         "Tenure Months": data["tenure_months"],
         "Monthly Charges": data["monthly_charges"],

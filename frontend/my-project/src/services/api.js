@@ -1,4 +1,9 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+// Base URL is read from environment variables
+// Local:  http://127.0.0.1:8000
+// Prod:   https://your-backend-name.onrender.com
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 export async function predictChurn(payload) {
   try {
@@ -11,13 +16,13 @@ export async function predictChurn(payload) {
     });
 
     if (!response.ok) {
-      throw new Error("Prediction request failed");
+      const text = await response.text();
+      throw new Error(`Prediction failed: ${text}`);
     }
 
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
-    console.error("API Error:", error);
+    console.error("❌ API Error:", error);
     throw error;
   }
 }

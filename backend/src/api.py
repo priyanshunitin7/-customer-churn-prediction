@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from src.predict import predict_churn
 
@@ -17,10 +17,21 @@ class ChurnRequest(BaseModel):
 
 # ---------------- API ENDPOINT ----------------
 
-@router.post("/predict")
+@router.post(
+    "/predict",
+    tags=["Churn Prediction"],
+    summary="Predict customer churn probability",
+)
 def predict(data: ChurnRequest):
     """
-    Predict churn probability and label.
+    Predict churn probability and churn label
+    using the trained ML pipeline.
     """
-    result = predict_churn(data.dict())
-    return result
+    try:
+        result = predict_churn(data.dict())
+        return result
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Prediction failed: {str(e)}"
+        )
